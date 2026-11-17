@@ -87,6 +87,13 @@ h2::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--
 .tag.walk{background:#fff}
 .tag.must{background:var(--yellow);border-style:solid}
 .tag.book{background:var(--coral-l);border-style:dashed}
+.row{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.row .main{flex:1;min-width:0}
+.thumb{flex:0 0 56px;width:56px;height:56px;border:var(--line) solid var(--ink);border-radius:16px;overflow:hidden}
+.thumb svg{width:100%;height:100%}
+.addr{display:block;margin-top:6px;font-size:12px;line-height:1.5;color:var(--ink);text-decoration:none;padding:3px 8px;background:var(--yellow-l);border:2px solid var(--ink);border-radius:12px;word-break:break-all}
+.addr b{font-weight:normal;display:block;font-size:13px}
+.addr span{opacity:.8}
 .note{font-size:13px;margin-top:4px;padding:4px 10px;background:var(--water-l);border-radius:12px;display:inline-block}
 .legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:2px dashed rgba(62,58,57,.3)}
 
@@ -269,10 +276,12 @@ footer{text-align:center;font-size:13px;opacity:.6;margin-top:30px}
         <dt>飯店</dt><dd>OMO5 東京五反田 by 星野集團</dd>
         <dt>日期</dt><dd>4/10（六）– 4/16（五），6 晚</dd>
         <dt>車站</dt><dd>JR 山手線／都營淺草線 五反田站</dd>
+        <dt>地址</dt><dd>〒141-0031 東京都品川区西五反田8-4-13（五反田 JP 大樓高樓層）</dd>
+        <dt>步行</dt><dd>五反田站約 6 分鐘；東急池上線「大崎廣小路站」約 1 分鐘</dd>
         <dt>早餐</dt><dd>不含早餐</dd>
         <dt>狀態</dt><dd><span class="tag metro">已訂好</span></dd>
       </dl>
-      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=OMO5+%E6%9D%B1%E4%BA%AC%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">在 Google 地圖開啟</a>
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=OMO5+%E6%9D%B1%E4%BA%AC%E4%BA%94%E5%8F%8D%E7%94%B0+%E6%9D%B1%E4%BA%AC%E9%83%BD%E5%93%81%E5%B7%9D%E5%8C%BA%E8%A5%BF%E4%BA%94%E5%8F%8D%E7%94%B08-4-13" target="_blank" rel="noopener">在 Google 地圖開啟</a>
     </div>
   </section>
 
@@ -361,6 +370,63 @@ const ART = {
  plane:`<g class="cloud"><path d="M6 64q0-10 10-10q5-9 15-5q9-5 14 4q10 0 10 11z" fill="#fff"/></g><g class="cloud c2"><path d="M70 72q0-8 8-8q4-7 12-4q7-4 11 3q8 0 8 9z" fill="#fff"/></g><g class="float"><path d="M20 38L86 32L102 16L110 18L102 36L86 42L20 44z" fill="#A8D3E6"/><path d="M50 36L66 20H74L68 35M52 43L64 54H72L68 42"  fill="#F6D27A"/></g><circle cx="100" cy="58" r="0"/>`
 };
 
+/* 縮圖：手繪風插圖（非實景照片），依地點類型顯示 */
+const ICON = {
+ plane:['#A8D3E6','<path d="M8 32L38 27L46 14L51 16L46 31L38 35L8 37z" fill="#fff"/><path d="M22 30L30 16H35L32 29M24 35L31 46H36L33 34" fill="#F6D27A"/>'],
+ train:['#E3F1F7','<rect x="9" y="12" width="38" height="28" rx="9" fill="#fff"/><rect x="14" y="18" width="12" height="9" rx="2" fill="#A8D3E6"/><rect x="30" y="18" width="12" height="9" rx="2" fill="#A8D3E6"/><path d="M9 33H47" stroke="#F2A497"/><path d="M16 40L12 48M40 40L44 48"/>'],
+ hotel:['#FCF1D3','<rect x="14" y="14" width="28" height="34" rx="3" fill="#fff"/><path d="M12 15L28 6L44 15z" fill="#F2A497"/><g fill="#A8D3E6"><rect x="19" y="21" width="7" height="6"/><rect x="30" y="21" width="7" height="6"/><rect x="19" y="32" width="7" height="6"/><rect x="30" y="32" width="7" height="6"/></g>'],
+ sweets:['#FBE3DE','<path d="M10 28H46L42 46H14z" fill="#fff"/><ellipse cx="28" cy="28" rx="18" ry="6" fill="#F6D27A"/><path d="M20 27H23M30 28H34" stroke-width="2"/>'],
+ bowl:['#FCF1D3','<path d="M8 26H48Q46 46 28 46Q10 46 8 26z" fill="#fff"/><path d="M14 29H42Q38 37 28 37Q18 37 14 29z" fill="#F2A497" stroke-width="0"/><path d="M20 20Q18 14 22 10M30 20Q28 14 32 10" fill="none"/>'],
+ station:['#FBE3DE','<rect x="8" y="22" width="40" height="24" rx="3" fill="#F2A497"/><path d="M6 24Q14 10 22 24z" fill="#A8D3E6"/><path d="M34 24Q42 10 50 24z" fill="#A8D3E6"/><rect x="22" y="18" width="12" height="8" fill="#fff"/><path d="M24 46V36H32V46" fill="#FCF1D3"/>'],
+ shrine:['#E8F3E1','<path d="M8 14Q28 8 48 14L47 19Q28 14 9 19z" fill="#F2A497"/><rect x="13" y="22" width="30" height="5" rx="2" fill="#F2A497"/><path d="M17 18V48M39 18V48" stroke-width="5"/>'],
+ bread:['#FCF1D3','<path d="M8 34Q8 18 28 18Q48 18 48 34Q48 42 40 42H16Q8 42 8 34z" fill="#F6D27A"/><path d="M20 24L24 32M30 22L34 31M38 26L40 33" stroke-width="2.5"/>'],
+ omu:['#FCF1D3','<ellipse cx="28" cy="38" rx="21" ry="9" fill="#fff"/><path d="M10 36Q10 20 28 20Q46 20 46 36Q40 42 28 42Q16 42 10 36z" fill="#F6D27A"/><path d="M16 30Q22 26 28 32T40 28" stroke="#F2A497" fill="none"/>'],
+ bag:['#E3F1F7','<path d="M12 20H44L47 48H9z" fill="#F2A497"/><path d="M20 20V15Q20 9 28 9Q36 9 36 15V20" fill="none"/><circle cx="21" cy="29" r="2" fill="#3E3A39"/><circle cx="35" cy="29" r="2" fill="#3E3A39"/>'],
+ sky:['#E3F1F7','<rect x="8" y="14" width="40" height="34" rx="5" fill="#A8D3E6"/><circle cx="36" cy="26" r="6" fill="#F6D27A"/><path d="M8 40H48" fill="none"/><path d="M8 40L18 32L26 38L34 34L48 42V48H8z" fill="#fff" stroke-width="0"/>'],
+ pot:['#FBE3DE','<path d="M10 24H46L42 46H14z" fill="#fff"/><path d="M6 24H50M22 16Q20 10 24 6M32 16Q30 10 34 6M14 33H42" fill="none"/>'],
+ fuji:['#E3F1F7','<path d="M4 46L28 14L52 46z" fill="#A8D3E6"/><path d="M20 26L28 14L36 26L32 24L28 29L24 24z" fill="#fff"/>'],
+ sakura:['#FBE3DE','<g fill="#F2A497"><circle cx="28" cy="16" r="8"/><circle cx="40" cy="25" r="8"/><circle cx="35" cy="39" r="8"/><circle cx="21" cy="39" r="8"/><circle cx="16" cy="25" r="8"/></g><circle cx="28" cy="29" r="5" fill="#F6D27A"/>'],
+ park:['#FCF1D3','<circle cx="28" cy="24" r="16" fill="#fff"/><path d="M28 8V40M12 24H44M17 13L39 35M39 13L17 35" stroke-width="2" fill="none"/><path d="M20 52L28 24L36 52" fill="none"/><circle cx="28" cy="24" r="3" fill="#F6D27A"/>'],
+ sea:['#E3F1F7','<path d="M26 8V34H44z" fill="#fff"/><path d="M26 8V40" fill="none"/><path d="M12 38H44L40 46H16z" fill="#F2A497"/><path d="M4 50Q10 44 16 50T28 50T40 50T52 50" fill="none"/>'],
+ lantern:['#FBE3DE','<path d="M28 4V10" fill="none"/><rect x="14" y="10" width="28" height="36" rx="14" fill="#F2A497"/><path d="M16 20H40M14 28H42M16 36H40" stroke-width="2"/><rect x="20" y="8" width="16" height="5" rx="2" fill="#3E3A39"/><rect x="20" y="44" width="16" height="5" rx="2" fill="#3E3A39"/>'],
+ cup:['#E8F3E1','<path d="M10 22H42V34Q42 46 26 46Q10 46 10 34z" fill="#B9DAA5"/><path d="M42 26H48Q50 34 42 36" fill="none"/><path d="M20 16Q18 10 22 6M30 16Q28 10 32 6" fill="none"/>'],
+ light:['#E3F1F7','<circle cx="16" cy="18" r="7" fill="#F6D27A"/><circle cx="38" cy="14" r="5" fill="#F6D27A"/><circle cx="30" cy="34" r="9" fill="#F2A497"/><circle cx="12" cy="40" r="5" fill="#B9DAA5"/><circle cx="44" cy="42" r="6" fill="#fff"/>'],
+ tower:['#E3F1F7','<path d="M28 4V14" fill="none"/><path d="M18 50L25 14H31L38 50" fill="#F2A497"/><rect x="21" y="29" width="14" height="5" rx="2" fill="#fff"/><path d="M21 40H35" fill="none"/>'],
+ cake:['#FBE3DE','<path d="M8 30H48V46H8z" fill="#fff"/><path d="M8 38H48" stroke="#F2A497" fill="none"/><path d="M8 30Q8 20 28 20Q48 20 48 30z" fill="#F6D27A"/><circle cx="28" cy="14" r="5" fill="#F2A497"/>']
+};
+function thumbHtml(p){const [bg,svg]=ICON[p.i]||ICON.hotel;return `<div class="thumb" style="background:${bg}"><svg viewBox="0 0 56 56" aria-hidden="true"><g ${S}>${svg}</g></svg></div>`}
+function addrHtml(p){
+  const q=encodeURIComponent(p.q||(p.n+' '+p.a));
+  return `<a class="addr" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener"><b>📍 ${p.n}</b><span>${p.a}</span></a>`;
+}
+/* 地點資料：鍵 = 第幾天(從 0 起)|時間 */
+const P = {
+ '0|11:45':[{i:'plane',n:'成田國際機場 第 1 航廈',a:'千葉県成田市古込1-1'}],
+ '0|14:30':[{i:'hotel',n:'OMO5 東京五反田',a:'東京都品川区西五反田8-4-13',q:'OMO5東京五反田 東京都品川区西五反田8-4-13'}],
+ '0|15:00':[{i:'sweets',n:'BRULEE MERIZE（東京ギフトパレット）',a:'JR 東京站內・八重洲北口剪票口附近',q:'BRULEE MERIZE 東京ギフトパレット店'}],
+ '0|17:30':[{i:'bowl',n:'炭焼 うな富士 八重洲店',a:'東京都中央区八重洲2-2-1 東京ミッドタウン八重洲 3F'}],
+ '0|19:00':[{i:'station',n:'東京車站地下街',a:'東京都千代田区丸の内1-9-1',q:'東京駅 一番街'}],
+ '1|9:00':[{i:'shrine',n:'明治神宮',a:'東京都渋谷区代々木神園町1-1'}],
+ '1|10:00':[{i:'bread',n:'吉伊卡哇麵包房（OMOCADO 3F）',a:'東京都渋谷区神宮前4-30-3 東急プラザ表参道原宿',q:'ちいかわベーカリー 東急プラザ表参道原宿'}],
+ '1|12:00':[{i:'omu',n:'オムライス&洋食 Yellow',a:'地址待確認，點此在地圖搜尋店名',q:'オムライス&洋食 yellow'}],
+ '1|15:00':[{i:'bag',n:'澀谷 PARCO',a:'東京都渋谷区宇田川町15-1'},{i:'bag',n:'MIYASHITA PARK',a:'東京都渋谷区渋谷1-6-10'}],
+ '1|17:00':[{i:'sky',n:'SHIBUYA SKY',a:'東京都渋谷区渋谷2-24-12 渋谷スクランブルスクエア 屋上'}],
+ '1|19:00':[{i:'pot',n:'しゃぶしゃぶ つかだ 渋谷店',a:'東京都渋谷区渋谷2-24-12 渋谷スクランブルスクエア 12F',q:'しゃぶしゃぶつかだ 渋谷スクランブルスクエア店'}],
+ '2|10:00':[{i:'fuji',n:'河口湖',a:'山梨県南都留郡富士河口湖町',q:'河口湖'}],
+ '2|13:00':[{i:'sakura',n:'河口湖北岸（大石公園一帶）',a:'山梨県南都留郡富士河口湖町大石',q:'大石公園 河口湖'}],
+ '3|8:30':[{i:'bread',n:'SAISON bakery & coffee',a:'東京都品川区東五反田2-8-3 五反田ASビル 1F'}],
+ '3|10:30':[{i:'park',n:'ちいかわパーク（吉伊卡哇樂園）',a:'東京都豊島区東池袋3-3-5 サンシャインシティ アネックス B1F・1F（入口在 B1F）'}],
+ '3|17:00':[{i:'cake',n:'HARBS 池袋 PARCO 店',a:'東京都豊島区南池袋1-28-2 池袋PARCO 本館 B1F'}],
+ '4|8:00':[{i:'sea',n:'東京迪士尼海洋',a:'千葉県浦安市舞浜1-13',q:'東京ディズニーシー'}],
+ '5|10:00':[{i:'lantern',n:'淺草寺',a:'東京都台東区浅草2-3-1'}],
+ '5|10:45':[{i:'shrine',n:'淺草神社',a:'東京都台東区浅草2-3-19'}],
+ '5|11:00':[{i:'cup',n:'八十八 淺草店',a:'東京都台東区花川戸2-14-3',q:'八十八 浅草'}],
+ '5|13:00':[{i:'light',n:'teamLab Borderless（麻布台之丘）',a:'東京都港区虎ノ門5-9-1 麻布台ヒルズ ガーデンプラザA B1F',q:'teamLab Borderless 麻布台ヒルズ'}],
+ '5|16:45':[{i:'tower',n:'增上寺',a:'東京都港区芝公園4-7-35'},{i:'tower',n:'東京鐵塔',a:'東京都港区芝公園4-2-8',q:'東京タワー'}],
+ '5|19:00':[{i:'bowl',n:'Terrace Dining TANGO',a:'東京都港区芝公園3-5-4 渋澤ビル 1F'}],
+ '6|7:30':[{i:'train',n:'品川站',a:'東京都港区高輪3-26-26',q:'品川駅'}],
+ '6|9:30':[{i:'plane',n:'成田國際機場 第 1 航廈',a:'千葉県成田市古込1-1'}]
+};
 const daysEl=document.getElementById('days'), dayEl=document.getElementById('day');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)');
 function tagHtml(x){return `<span class="tag ${x.c}">${x.t}</span>`}
@@ -369,10 +435,15 @@ function renderDay(i,animate){
   [...daysEl.children].forEach((b,j)=>b.setAttribute('aria-selected',j===i));
   dayEl.innerHTML=`<div class="day-head"><svg viewBox="0 0 120 80" aria-hidden="true"><g ${S}>${ART[D.art]}</g></svg>
     <div><p>Day ${i+1}・${D.d}（${D.w}）</p><h3>${D.title}</h3><p>${D.sub}</p></div></div>
-    <ol class="tl">${D.items.map(([t,w,tags,o={}])=>`<li class="${o.must?'must':''}"><div class="t">${t}</div><div>
-      <div class="what">${w}</div>
-      <div class="tags">${o.must?'<span class="tag must">★ 必去</span>':''}${tags.map(tagHtml).join('')}${o.book?'<span class="tag book">要預訂</span>':''}</div>
-      ${o.note?`<div class="note">${o.note}</div>`:''}</div></li>`).join('')}</ol>
+    <ol class="tl">${D.items.map(([t,w,tags,o={}])=>{
+      const ps=P[i+'|'+t]||[];
+      return `<li class="${o.must?'must':''}"><div class="t">${t}</div><div>
+      <div class="row"><div class="main">
+        <div class="what">${w}</div>
+        <div class="tags">${o.must?'<span class="tag must">★ 必去</span>':''}${tags.map(tagHtml).join('')}${o.book?'<span class="tag book">要預訂</span>':''}</div>
+        ${o.note?`<div class="note">${o.note}</div>`:''}</div>
+        ${ps.length?thumbHtml(ps[0]):''}</div>
+      ${ps.map(addrHtml).join('')}</div></li>`}).join('')}</ol>
     <div class="legend"><span class="tag jr">JR</span><span class="tag metro">地鐵</span><span class="tag bus">巴士</span><span class="tag plane">飛機</span><span class="tag walk">步行</span></div>`;
   if(animate&&!reduce.matches){dayEl.classList.remove('bounce');void dayEl.offsetWidth;dayEl.classList.add('bounce');}
   try{localStorage.setItem('tokyo-day',i)}catch(e){}
