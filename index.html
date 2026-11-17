@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+<script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 :root{
   --paper:#FFFCF6; --ink:#3E3A39;
@@ -421,9 +423,18 @@ const TODO=[
  ['出發前準備',[['下載迪士尼官方 App、綁定門票',''],['Visit Japan Web 填寫入境資料','']]],
  ['購買清單',[['Meme 眼藥水','']]]
 ];
+/* 雲端同步：把 Firebase 設定貼在這裡就會啟用；維持 null 則只存在這支手機 */
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyA4qNWY5H6VFd6sz2JFxH7LOdUMcCYlXvw",
+  authDomain:"tokyo-2027-f7d0b.firebaseapp.com",
+  projectId:"tokyo-2027-f7d0b",
+  storageBucket:"tokyo-2027-f7d0b.firebasestorage.app",
+  messagingSenderId:"199061062710",
+  appId:"1:199061062710:web:a677dc94ce435f2f914497"
+};
 let saved={}; try{saved=JSON.parse(localStorage.getItem('tokyo-todo')||'{}')}catch(e){}
 const box=document.getElementById('todo-box');
-let html='<div class="prog"><i id="pbar"></i></div><div class="prog-txt" id="ptxt"></div>';
+let html='<div class="prog"><i id="pbar"></i></div><div class="prog-txt"><span id="sync"></span><span id="ptxt"></span></div>';
 TODO.forEach(([g,list])=>{
   html+=`<h3>${g}</h3>`;
   list.forEach(([n,s,def])=>{
@@ -437,12 +448,34 @@ function prog(){
   document.getElementById('pbar').style.width=(done/all.length*100)+'%';
   document.getElementById('ptxt').textContent=`完成 ${done} / ${all.length}`;
 }
-box.addEventListener('change',e=>{
-  saved[e.target.dataset.k]=e.target.checked;
-  try{localStorage.setItem('tokyo-todo',JSON.stringify(saved))}catch(err){}
+const syncEl=document.getElementById('sync');
+function setSync(t){syncEl.textContent=t?t+'　':''}
+function cache(){try{localStorage.setItem('tokyo-todo',JSON.stringify(saved))}catch(err){}}
+function applySaved(){
+  box.querySelectorAll('input').forEach(i=>{if(i.dataset.k in saved)i.checked=saved[i.dataset.k]});
   prog();
+}
+let ref=null;
+box.addEventListener('change',e=>{
+  const k=e.target.dataset.k, v=e.target.checked;
+  saved[k]=v; cache(); prog();
+  if(ref) ref.set({todo:{[k]:v}},{merge:true}).catch(()=>setSync('⚠ 同步失敗，已先存在這支手機'));
 });
 prog();
+function initSync(){
+  if(!(FIREBASE_CONFIG && window.firebase)){ setSync('📱 只存在這支手機'); return; }
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    ref=firebase.firestore().collection('trips').doc('tokyo-2027');
+    setSync('☁ 連線中…');
+    ref.onSnapshot(snap=>{
+      const d=(snap.data()||{}).todo||{};
+      saved=Object.assign({},saved,d); cache(); applySaved();
+      setSync(snap.metadata.fromCache?'☁ 離線中，恢復網路後同步':'☁ 已同步');
+    },()=>setSync('⚠ 無法連線雲端，目前只存在這支手機'));
+  }catch(err){setSync('⚠ 雲端設定有誤')}
+}
+addEventListener('load',initSync);
 
 /* nav highlight */
 const links=[...document.querySelectorAll('nav a')];
